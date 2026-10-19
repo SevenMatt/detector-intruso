@@ -23,8 +23,6 @@ Baixe o executável do seu sistema na aba
    ```powershell
    .\DetectorIntruso.exe --detect
 
-## Antivírus podem acusar falso positivo (comum em ferramentas de IR). Confira o hash SHA-256 publicado no release antes de liberar o arquivo.
-
 ## Linux:
 chmod +x detector_intruso
 sudo ./detector_intruso --detect
