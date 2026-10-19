@@ -51,7 +51,6 @@ def is_admin():
 
 #Detecção
 
-#Retorna lista de processos suspeitos.
 def check_processos():
     print("\n[1] PROCESSOS SUSPEITOS")  
     suspeitos = []
@@ -83,7 +82,6 @@ def check_processos():
                 log("CRIT", f"Processo suspeito PID={pid} ({user}): {args}")
     return suspeitos
 
-#Extrai IPs remotos e PIDs de conexões suspeitas
 def extrair_ips_e_pids():
     print("\n[2] CONEXÕES DE REDE ATIVAS")
     achados = [] 
@@ -118,7 +116,6 @@ PERSIST_RUNKEYS = [
     r"HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce",
 ]
 
-#Retorna lista de itens de persistência suspeitos para remoção
 def check_persistencia():
     print("\n=== [3] PERSISTÊNCIA ===")
     itens = []
@@ -155,9 +152,6 @@ def check_persistencia():
                         log("WARN", f"Persistência em {f}: {line.strip()}")
     return itens
 
-
-#Contenção
-
 def matar_processo(pid):
     if platform.system() == "Windows":
         run(["taskkill", "/F", "/PID", str(pid)])
@@ -169,7 +163,6 @@ def bloquear_ip(ip):
     if not re.match(r"^\d+\.\d+\.\d+\.\d+$", ip):
         return
     if platform.system() == "Windows":
-        # Bloqueia entrada e saída via Windows Firewall
         run(["netsh", "advfirewall", "firewall", "add", "rule",
              f"name=Bloqueio IR {ip}", "dir=in", "action=block", f"remoteip={ip}"])
         run(["netsh", "advfirewall", "firewall", "add", "rule",
@@ -183,7 +176,6 @@ def bloquear_ip(ip):
                  "ip", "saddr", ip, "drop"])
     act(f"IP {ip} bloqueado no firewall (entrada e saída)")
 
-#No Windows mata o processo e derruba a conexão
 def matar_conexao_windows(pid, ip, porta):
     matar_processo(pid)
 
@@ -212,8 +204,7 @@ def remover_persistencia(itens):
             act(f"Linha de persistência neutralizada em {ctx}")
 
 def conta_suspeita_remover():
-    if platform.system() == "Windows":
-        # Remove usuários recém-criados que estejam no grupo admins 
+    if platform.system() == "Windows": 
         out = run(["net", "localgroup", "administrators"])
         for line in out.splitlines():
             nome = line.strip()
@@ -227,7 +218,6 @@ def conta_suspeita_remover():
             run(["userdel", "-r", u])
             act(f"Conta root não autorizada '{u}' removida")
 
-#Principal
 
 def responder(suspeitos, conexoes, persist_itens, confirmar=True):
     print("\n" + "=" * 60)
@@ -243,11 +233,9 @@ def responder(suspeitos, conexoes, persist_itens, confirmar=True):
             print("Contenção cancelada. Nada foi alterado.")
             return
 
-    #Bloquear IPs do invasor no firewall (primeiro, corta o canal)
     for ip in list(ATTACKER_IPS):
         bloquear_ip(ip)
 
-    #Encerra as conexões e mata os processos suspeitos
     for pid, ip, porta in conexoes:
         if platform.system() == "Windows":
             matar_conexao_windows(pid, ip, porta)
@@ -260,10 +248,7 @@ def responder(suspeitos, conexoes, persist_itens, confirmar=True):
         except ValueError:
             pass
 
-    #Remove persistência
     remover_persistencia(persist_itens)
-
-    #Contas comprometidas
     conta_suspeita_remover()
 
     print("\nCONTENÇÃO CONCLUÍDA")
