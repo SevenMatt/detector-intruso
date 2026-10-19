@@ -2,7 +2,7 @@
 
 Ferramenta de triagem e resposta rápida a incidentes (IR) para Windows e Linux.
 Detecta processos suspeitos, conexões de C2, mecanismos de persistência,
-contas comprometidas e arquivos modificados recentemente — e pode conter
+contas comprometidas e arquivos modificados recentemente e pode conter
 o intruso automaticamente.
 
 ## Instalação
