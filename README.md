@@ -5,34 +5,56 @@ Detecta processos suspeitos, conexões de C2, mecanismos de persistência,
 contas comprometidas e arquivos modificados recentemente — e pode conter
 o intruso automaticamente.
 
-## Uso rápido
+## Instalação
 
-python detector_intruso.py --detect     # apenas detecção
-python detector_intruso.py --respond    # detecção + contenção (pede confirmação)
+### Opção 1  Executável pronto (sem Python) Recomendado
+
+Baixe o executável do seu sistema na aba
+[**Releases**](https://github.com/SevenMatt/detector-intrusos/releases):
+
+| Sistema | Arquivo              
+| Windows | `DetectorIntruso.exe`
+| Linux   | `detector_intruso`   
+
+**Windows:**
+1. Baixe `DetectorIntruso.exe`.
+2. Abra o **PowerShell como Administrador** na pasta do download.
+3. Execute:
+   ```powershell
+   .\DetectorIntruso.exe --detect
+
+## Antivírus podem acusar falso positivo (comum em ferramentas de IR). Confira o hash SHA-256 publicado no release antes de liberar o arquivo.
+
+## Linux:
+chmod +x detector_intruso
+sudo ./detector_intruso --detect
+
+
+## Opção 2  Clonar com Git
+git clone https://github.com/SevenMatt/detector-intrusos.git
+cd detector-intrusos
+
+## Opção 3  Baixar sem Git
+Na página do repositório, clique em Code, Download ZIP, descompacte e siga para "Executando com Python" abaixo.
+
+## Executando com Python
+Requisito: Python 3.6+. Sem dependências externas (usa apenas a biblioteca padrão).
+
+`Windows (PowerShell como Administrador):`
+python detector_intruso.py --detect
+
+`Linux / WSL:`
+sudo python3 detector_intruso.py --detect
+**Usuários WSL: o script roda no ambiente Linux do WSL, mas para escanear o Windows host use o .exe no PowerShell.**
+
+## Uso rápido
+python detector_intruso.py --detect # apenas detecção
+python detector_intruso.py --respond # detecção + contenção (pede confirmação)
 
 ## Requisitos
-- Python 3.6+ (ou use o executável da seção Releases)
-- Privilégios de administrador/root (obrigatório no modo --respond)
+Python 3.6+ (ou use o executável da seção Releases)
+Privilégios de administrador/root (obrigatório no modo --respond)
 
-## O que ele faz
- !!Módulo!!            !!Detalhe!!                                               
-Processos          Varre comandos em busca de ferramentas de ataque       
-Rede               Detecta conexões em portas típicas de C2 (4444, 31337…)
-Persistência       Run keys, tarefas agendadas, cron, .bashrc             
-Contas             UID 0 duplicado (Linux), admins novos (Windows)        
-Arquivos           Executáveis recentes em /tmp, Temp, etc.               
-
-
-## Contenção (--respond)
-1. Bloqueia os IPs do invasor no firewall (entrada e saída)
-2. Encerra conexões ativas e mata processos suspeitos
-3. Remove persistência (Run keys, cron, tarefas)
-4. Remove contas comprometidas
 
 ## Aviso
-Ferramenta para resposta a incidentes em sistemas próprios ou com autorização
-explícita. Revise as ações antes de confirmar a contenção. Use em ambiente de
-teste antes de aplicar em produção.
-
-## Licença
-MIT
+`Ferramenta para resposta a incidentes em sistemas próprios ou com autorização explícita. Revise as ações antes de confirmar a contenção. Use em ambiente de teste antes de aplicar em produção.`
